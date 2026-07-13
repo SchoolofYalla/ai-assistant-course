@@ -294,33 +294,30 @@
         }
 
         /* --- Call Controls --- */
-        #controls-wrapper {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 1rem;
-            gap: 1.5rem;
-        }
-
         .mute-btn {
-            width: 56px;
-            height: 56px;
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: #E5E7EB;
-            display: none;
+            display: flex;
+            opacity: 0;
+            pointer-events: none;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            flex-shrink: 0;
+            z-index: 1000;
         }
 
         .mute-btn.show {
-            display: flex;
-            animation: popIn 0.3s ease forwards;
+            /* Kept for JS compatibility but no longer needed for visibility */
+            opacity: 1;
+            pointer-events: auto;
         }
 
         @keyframes popIn {
@@ -470,6 +467,24 @@
     <div class="ambient-orb orb-3"></div>
 
     <div class="glass-card">
+        <button id="mute-btn" class="mute-btn" aria-label="Mute Microphone" title="Mute/Unmute">
+            <!-- Unmuted Icon -->
+            <svg id="icon-unmuted" viewBox="0 0 24 24">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+            <!-- Muted Icon -->
+            <svg id="icon-muted" viewBox="0 0 24 24" style="display: none;">
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+                <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
+                <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+        </button>
+
         <img src="assets/new logo.png" alt="School of Yalla Logo" class="brand-logo">
         
         <div class="status-badge">
@@ -486,30 +501,10 @@
         </div>
         
         <!-- Interactive Vapi Zone -->
-        <div id="controls-wrapper">
-            <div id="vapi-icon-slot">
-                <div class="pulse-ring"></div>
-                <div class="pulse-ring"></div>
-                <!-- Vapi button will be moved here -->
-            </div>
-            
-            <button id="mute-btn" class="mute-btn" aria-label="Mute Microphone" title="Mute/Unmute">
-                <!-- Unmuted Icon -->
-                <svg id="icon-unmuted" viewBox="0 0 24 24">
-                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                    <line x1="12" y1="19" x2="12" y2="23"></line>
-                    <line x1="8" y1="23" x2="16" y2="23"></line>
-                </svg>
-                <!-- Muted Icon -->
-                <svg id="icon-muted" viewBox="0 0 24 24" style="display: none;">
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                    <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
-                    <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path>
-                    <line x1="12" y1="19" x2="12" y2="23"></line>
-                    <line x1="8" y1="23" x2="16" y2="23"></line>
-                </svg>
-            </button>
+        <div id="vapi-icon-slot">
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring"></div>
+            <!-- Vapi button will be moved here -->
         </div>
     </div>
 
