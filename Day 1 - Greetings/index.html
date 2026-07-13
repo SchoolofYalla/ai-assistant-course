@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arabic Language Coach</title>
-    <link rel="icon" type="image/png" href="./assets/new%20logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -293,65 +292,6 @@
             align-items: center !important;
         }
 
-        /* --- Call Controls --- */
-        #controls-wrapper {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 1rem;
-        }
-
-        .mute-btn {
-            position: absolute;
-            right: 0;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #E5E7EB;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0;
-            pointer-events: none;
-            transform: translateX(20px);
-        }
-
-        .mute-btn.show {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(65px); /* Slide out next to the main button */
-        }
-
-        .mute-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateX(65px) scale(1.08);
-        }
-
-        .mute-btn:active {
-            transform: translateX(65px) scale(0.95);
-        }
-
-        .mute-btn.is-muted {
-            background: rgba(239, 68, 68, 0.15);
-            border-color: rgba(239, 68, 68, 0.4);
-            color: #EF4444;
-        }
-
-        .mute-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
         /* --- Live Transcript Area --- */
         .transcript-container {
             margin-bottom: 1.5rem;
@@ -485,30 +425,10 @@
         </div>
         
         <!-- Interactive Vapi Zone -->
-        <div id="controls-wrapper">
-            <div id="vapi-icon-slot">
-                <div class="pulse-ring"></div>
-                <div class="pulse-ring"></div>
-                <!-- Vapi button will be moved here -->
-            </div>
-            
-            <button id="mute-btn" class="mute-btn" aria-label="Mute Microphone" title="Mute/Unmute">
-                <!-- Unmuted Icon -->
-                <svg id="icon-unmuted" viewBox="0 0 24 24">
-                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                    <line x1="12" y1="19" x2="12" y2="23"></line>
-                    <line x1="8" y1="23" x2="16" y2="23"></line>
-                </svg>
-                <!-- Muted Icon -->
-                <svg id="icon-muted" viewBox="0 0 24 24" style="display: none;">
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                    <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
-                    <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path>
-                    <line x1="12" y1="19" x2="12" y2="23"></line>
-                    <line x1="8" y1="23" x2="16" y2="23"></line>
-                </svg>
-            </button>
+        <div id="vapi-icon-slot">
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring"></div>
+            <!-- Vapi button will be moved here -->
         </div>
     </div>
 
@@ -566,29 +486,6 @@
                     }
                 });
 
-                // --- Mute Logic ---
-                var muteBtn = document.getElementById('mute-btn');
-                var isMuted = false;
-                var iconUnmuted = document.getElementById('icon-unmuted');
-                var iconMuted = document.getElementById('icon-muted');
-
-                if (muteBtn) {
-                    muteBtn.addEventListener('click', function() {
-                        isMuted = !isMuted;
-                        vapiInstance.setMuted(isMuted);
-                        
-                        if (isMuted) {
-                            muteBtn.classList.add('is-muted');
-                            iconUnmuted.style.display = 'none';
-                            iconMuted.style.display = 'block';
-                        } else {
-                            muteBtn.classList.remove('is-muted');
-                            iconUnmuted.style.display = 'block';
-                            iconMuted.style.display = 'none';
-                        }
-                    });
-                }
-
                 // --- Handle Call State (Button Color) ---
                 vapiInstance.on('call-start', function() {
                     var btn = document.getElementById('vapi-support-btn') || document.querySelector('.vapi-btn');
@@ -599,8 +496,6 @@
                     
                     var statusBadge = document.querySelector('.status-badge span');
                     if (statusBadge) statusBadge.innerText = 'Lesson in Progress...';
-
-                    if (muteBtn) muteBtn.classList.add('show');
                 });
 
                 vapiInstance.on('call-end', function() {
@@ -612,15 +507,6 @@
                     
                     var statusBadge = document.querySelector('.status-badge span');
                     if (statusBadge) statusBadge.innerText = 'AI Assistant is Ready';
-
-                    if (muteBtn) {
-                        muteBtn.classList.remove('show');
-                        // Reset mute state for next call
-                        isMuted = false;
-                        muteBtn.classList.remove('is-muted');
-                        iconUnmuted.style.display = 'block';
-                        iconMuted.style.display = 'none';
-                    }
                 });
 
                 // Poll for injection to move the button
