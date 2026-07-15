@@ -576,12 +576,8 @@
             script.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
 
             script.onload = function () {
-                var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '';
-
                 var vapiInstance = window.vapiSDK.run({
-                    // If local, use the new key (ensure Origins is BLANK in Vapi dashboard for this key)
-                    // If live, use the old key (restricted to schoolofyalla.github.io)
-                    apiKey: isLocal ? "9187c0ad-2bed-4813-ade7-0575024e2445" : "b1fef61c-1fa9-4e44-af35-2207ade48086",
+                    apiKey: "9187c0ad-2bed-4813-ade7-0575024e2445",
                     assistant: "9b607329-4085-42cc-99d0-34d1672bbe23",
                     config: {}
                 });
