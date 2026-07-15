@@ -564,14 +564,15 @@
 
             script.onload = function () {
                 var vapiInstance = window.vapiSDK.run({
-                    apiKey: "7e61aeba-21c0-4e7c-81a5-3e1a7df55ee3",
+                    //apiKey: "7e61aeba-21c0-4e7c-81a5-3e1a7df55ee3", //this is the real one 
+                    apiKey: "1e7aaac7-cbe5-4f68-ad84-e179cef4d722", // this is for testing
                     assistant: "9b607329-4085-42cc-99d0-34d1672bbe23",
                     config: {}
                 });
 
                 // --- Handle Live Transcripts ---
                 var transcriptBox = document.getElementById('transcript-container');
-                var currentPartialBubble = null;
+                var partialBubbles = { user: null, assistant: null };
 
                 vapiInstance.on('message', function (msg) {
                     // Only process transcript messages
@@ -581,22 +582,21 @@
 
                         if (!text) return;
 
-                        // If it's a partial transcript, update the current bubble
+                        // If it's a partial transcript, update the specific role's current bubble
                         if (msg.transcriptType === 'partial') {
-                            if (!currentPartialBubble || currentPartialBubble.dataset.role !== role) {
-                                currentPartialBubble = document.createElement('div');
-                                currentPartialBubble.className = 'message-bubble ' + (role === 'user' ? 'message-user' : 'message-assistant');
-                                currentPartialBubble.dataset.role = role;
-                                transcriptBox.appendChild(currentPartialBubble);
+                            if (!partialBubbles[role]) {
+                                partialBubbles[role] = document.createElement('div');
+                                partialBubbles[role].className = 'message-bubble ' + (role === 'user' ? 'message-user' : 'message-assistant');
+                                transcriptBox.appendChild(partialBubbles[role]);
                             }
-                            currentPartialBubble.innerText = text + "...";
+                            partialBubbles[role].innerText = text + "...";
                             transcriptBox.scrollTop = transcriptBox.scrollHeight;
                         }
                         // If it's a final transcript, finalize the bubble
                         else if (msg.transcriptType === 'final') {
-                            if (currentPartialBubble && currentPartialBubble.dataset.role === role) {
-                                currentPartialBubble.innerText = text;
-                                currentPartialBubble = null; // Reset for next message
+                            if (partialBubbles[role]) {
+                                partialBubbles[role].innerText = text;
+                                partialBubbles[role] = null; // Reset for next message from this role
                             } else {
                                 var finalBubble = document.createElement('div');
                                 finalBubble.className = 'message-bubble ' + (role === 'user' ? 'message-user' : 'message-assistant');
