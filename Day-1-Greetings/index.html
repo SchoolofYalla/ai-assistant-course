@@ -105,7 +105,6 @@
             text-align: center;
             display: flex;
             flex-direction: column;
-            max-height: calc(100vh - 4rem);
             box-shadow:
                 0 30px 60px -15px rgba(0, 0, 0, 0.6),
                 inset 0 1px 1px rgba(255, 255, 255, 0.1);
@@ -465,6 +464,13 @@
             .transcript-container {
                 max-height: 300px;
             }
+
+            .mute-btn {
+                top: 18px;
+                right: 18px;
+                width: 42px;
+                height: 42px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -501,6 +507,13 @@
             .message-bubble {
                 padding: 10px 14px;
                 font-size: 0.85rem;
+            }
+
+            .mute-btn {
+                top: 12px;
+                right: 12px;
+                width: 38px;
+                height: 38px;
             }
         }
     </style>
