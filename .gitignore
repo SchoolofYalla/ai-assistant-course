@@ -1,0 +1,17 @@
+# Secret configuration files
+.env
+backend-python/.env
+
+# Python bytecode and cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Audio debug recordings
+backend-python/debug_audio/
+*.wav
