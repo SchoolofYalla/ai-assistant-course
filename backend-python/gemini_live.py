@@ -389,15 +389,17 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                     if user_recognizer:
                         user_recognizer.stop_continuous_recognition_async()
 
+            current_ai_text = ""
+
             async def forward_gemini_to_browser():
                 """Forward Gemini Live audio/text responses to the browser."""
-                nonlocal ai_bubble_id
+                nonlocal ai_bubble_id, current_ai_text
                 try:
                     while True:
                         async for response in session.receive():
                             # Audio chunk (raw PCM bytes, 24kHz) → tell browser to mute mic
                             if response.data:
-                                if azure_key:
+                                if azure_key and ai_push_stream:
                                     ai_push_stream.write(response.data)
                                 b64 = base64.b64encode(response.data).decode("utf-8")
                                 await websocket.send_json({
@@ -405,25 +407,41 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                                     "data": b64
                                 })
 
-                            # Direct Gemini Native Text Stream (Fallback for Live Chat Bubbles)
+                            # Direct Gemini Native Text Stream (Live Chat Bubbles)
                             if response.server_content and response.server_content.model_turn:
                                 for part in response.server_content.model_turn.parts:
+                                    text_chunk = ""
                                     if hasattr(part, "text") and part.text:
-                                        text = post_process_transcript(part.text)
+                                        text_chunk = part.text
+                                    elif isinstance(part, dict) and part.get("text"):
+                                        text_chunk = part.get("text")
+
+                                    if text_chunk:
+                                        current_ai_text += text_chunk
+                                        processed = post_process_transcript(current_ai_text)
                                         await websocket.send_json({
                                             "type": "transcript_partial",
-                                            "text": text,
+                                            "text": processed,
                                             "id": ai_bubble_id,
                                             "role": "ai"
                                         })
 
-
-
                             # Turn complete — Gemini finished speaking; unmute mic
                             if response.server_content and response.server_content.turn_complete:
                                 safe_print("[Live] Gemini turn complete — unmuting mic")
+                                if current_ai_text:
+                                    final_processed = post_process_transcript(current_ai_text)
+                                    await websocket.send_json({
+                                        "type": "transcript",
+                                        "text": final_processed,
+                                        "id": ai_bubble_id,
+                                        "role": "ai"
+                                    })
+                                    current_ai_text = ""
+                                    ai_bubble_id = str(uuid.uuid4())
+
                                 await websocket.send_json({"type": "turn_complete"})
-                                if azure_key:
+                                if azure_key and ai_push_stream:
                                     # Inject 1 second of silence to segment the utterance
                                     ai_push_stream.write(b'\x00' * (24000 * 2))
 
