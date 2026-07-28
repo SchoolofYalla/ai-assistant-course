@@ -199,10 +199,16 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                 ai_stream_format = speechsdk.audio.AudioStreamFormat(samples_per_second=24000, bits_per_sample=16, channels=1)
                 ai_push_stream = speechsdk.audio.PushAudioInputStream(stream_format=ai_stream_format)
                 ai_audio_config = speechsdk.audio.AudioConfig(stream=ai_push_stream)
-                ai_speech_config = speechsdk.SpeechConfig(subscription=azure_key, region=azure_region)
+                speech_config = speechsdk.SpeechConfig(subscription=azure_key, region=azure_region)
+                speech_config.speech_recognition_language = "ar-JO"
+                
+                # Prevent Linux SDK from aggressively timing out while waiting for Gemini's first audio chunk
+                speech_config.set_property(speechsdk.PropertyId.SpeechServiceConnection_InitialSilenceTimeoutMs, "30000")
+                speech_config.set_property(speechsdk.PropertyId.SpeechServiceConnection_EndSilenceTimeoutMs, "30000")
+                
                 ai_auto_detect = speechsdk.languageconfig.AutoDetectSourceLanguageConfig(languages=["en-US", "ar-JO"])
                 ai_recognizer = speechsdk.SpeechRecognizer(
-                    speech_config=ai_speech_config,
+                    speech_config=speech_config,
                     auto_detect_source_language_config=ai_auto_detect,
                     audio_config=ai_audio_config
                 )
