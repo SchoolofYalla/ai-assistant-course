@@ -27,9 +27,9 @@ from vocabulary import DAILY_VOCABULARY
 
 def safe_print(msg: str):
     try:
-        print(msg)
+        print(msg, flush=True)
     except UnicodeEncodeError:
-        print(msg.encode("ascii", "replace").decode("ascii"))
+        print(msg.encode("ascii", "replace").decode("ascii"), flush=True)
 
 
 def is_audio_silent(wav_bytes: bytes, threshold: float = 5.0) -> bool:
