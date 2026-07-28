@@ -413,46 +413,15 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                                     "data": b64
                                 })
 
-
-
-                            # Direct Gemini Native Text Stream (Filtered Live AI Chat Bubbles)
-                            if response.server_content and response.server_content.model_turn:
-                                for part in response.server_content.model_turn.parts:
-                                    text_chunk = ""
-                                    if hasattr(part, "text") and part.text:
-                                        text_chunk = part.text
-                                    elif isinstance(part, dict) and part.get("text"):
-                                        text_chunk = part.get("text")
-
-                                    if text_chunk:
-                                        current_ai_text += text_chunk
-                                        processed = post_process_transcript(current_ai_text)
-                                        if processed.strip():
-                                            await websocket.send_json({
-                                                "type": "transcript_partial",
-                                                "text": processed,
-                                                "id": ai_bubble_id,
-                                                "role": "ai"
-                                            })
-
                             # Turn complete — Gemini finished speaking; unmute mic
+                            # NOTE: We do NOT read model_turn.parts text here.
+                            # Gemini Live's text channel contains internal planning/thinking — not actual spoken words.
+                            # Chat bubbles are driven EXCLUSIVELY by Azure STT which listens to the actual audio output.
                             if response.server_content and response.server_content.turn_complete:
                                 safe_print("[Live] Gemini turn complete — unmuting mic")
-                                if current_ai_text.strip():
-                                    final_processed = post_process_transcript(current_ai_text)
-                                    if final_processed.strip():
-                                        await websocket.send_json({
-                                            "type": "transcript",
-                                            "text": final_processed,
-                                            "id": ai_bubble_id,
-                                            "role": "ai"
-                                        })
-                                    current_ai_text = ""
-                                    ai_bubble_id = str(uuid.uuid4())
-
                                 await websocket.send_json({"type": "turn_complete"})
                                 if azure_key and ai_push_stream:
-                                    # Inject 1 second of silence to segment the utterance
+                                    # Inject silence to flush/segment the Azure STT utterance
                                     ai_push_stream.write(b'\x00' * (24000 * 2))
 
                 except WebSocketDisconnect:
