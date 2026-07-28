@@ -408,40 +408,9 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
 
 
 
-                            # Direct Gemini Native Text Stream (Live AI Dialogue Bubbles)
-                            if response.server_content and response.server_content.model_turn:
-                                for part in response.server_content.model_turn.parts:
-                                    text_chunk = ""
-                                    if hasattr(part, "text") and part.text:
-                                        text_chunk = part.text
-                                    elif isinstance(part, dict) and part.get("text"):
-                                        text_chunk = part.get("text")
-
-                                    if text_chunk:
-                                        current_ai_text += text_chunk
-                                        processed = post_process_transcript(current_ai_text)
-                                        if processed.strip():
-                                            await websocket.send_json({
-                                                "type": "transcript_partial",
-                                                "text": processed,
-                                                "id": ai_bubble_id,
-                                                "role": "ai"
-                                            })
-
                             # Turn complete — Gemini finished speaking; unmute mic
                             if response.server_content and response.server_content.turn_complete:
                                 safe_print("[Live] Gemini turn complete — unmuting mic")
-                                if current_ai_text.strip():
-                                    final_processed = post_process_transcript(current_ai_text)
-                                    await websocket.send_json({
-                                        "type": "transcript",
-                                        "text": final_processed,
-                                        "id": ai_bubble_id,
-                                        "role": "ai"
-                                    })
-                                    current_ai_text = ""
-                                    ai_bubble_id = str(uuid.uuid4())
-
                                 await websocket.send_json({"type": "turn_complete"})
                                 if azure_key and ai_push_stream:
                                     # Inject 1 second of silence to segment the utterance
