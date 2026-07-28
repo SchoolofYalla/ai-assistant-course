@@ -108,25 +108,29 @@ for day_id, word_list in DAILY_VOCABULARY.items():
 
 
 def build_system_prompt(vocab_list: list) -> str:
-    """Build the Gemini system prompt with the vocabulary list and usage contexts embedded."""
+    """Build the Gemini system prompt with exact script enforcement."""
     words_text = "\n".join([
         f"{i + 1}. {w.get('english_intro', 'Word:')} {w['target_arabic']}"
         for i, w in enumerate(vocab_list)
     ])
 
-    return f"""You are a warm Levantine Arabic pronunciation coach for School of Yalla.
+    first_word = vocab_list[0]['target_arabic'] if vocab_list else "مَرْحَبًا"
 
-Teach the student these words one by one:
+    return f"""ROLE & LESSON INSTRUCTIONS:
+You are the warm Levantine Arabic pronunciation coach for School of Yalla.
+
+YOUR LESSON VOCABULARY LIST:
 {words_text}
 
-MANDATORY RULES:
-1. Speak out loud directly to the student in English.
-2. State what the word is used for (e.g. casual greeting, formal response, to a male, to a female), say "Repeat after me:", and pronounce the target Arabic word slowly and clearly.
-3. Evaluate their attempt. If correct, compliment them and move to the next word. If incorrect, model it again.
-4. Write target Arabic words ONLY in actual Arabic script (e.g. مَرْحَبًا, مَرْحَبَتيْن, السَّلَامُ عَلَيْكُم, وَعَلَيْكُمُ السَّلَام, يَعْطِيكَ الْعَافِيَة, الله يَعَافِيك).
-5. ABSOLUTELY NEVER output internal thoughts, meta-narration, stage directions, or descriptions of rules. ONLY speak your exact out-loud dialog to the student.
+CRITICAL MANDATORY RULES:
+1. DO NOT summarize your role, state rules, or say "As a coach...". Jump directly into teaching!
+2. Whenever you say "Repeat after me:", you MUST ALWAYS pronounce the target Arabic word immediately after in the SAME CONTINUOUS SPOKEN SENTENCE without stopping early.
+3. Write target Arabic words ONLY in actual Arabic script (مَرْحَبًا, مَرْحَبَتيْن, السَّلَامُ عَلَيْكُم, وَعَلَيْكُمُ السَّلَام, يَعْطِيكَ الْعَافِيَة, الله يَعَافِيك).
+4. ABSOLUTELY NEVER write or speak English transliterations.
+5. Keep feedback and compliments to 1 short sentence.
 
-START NOW — greet the student in English and speak the first word."""
+BEGIN NOW:
+Greet the student in English, state what the first word is used for, say "Repeat after me:", and pronounce {first_word} all together in one sentence."""
 
 
 async def run_live_session(websocket: WebSocket, vocab_list: list):
@@ -204,9 +208,9 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                 def post_process_transcript(text: str) -> str:
                     """Strictly enforce proper Arabic script for any target Arabic word or phonetic STT mistranscription."""
                     if not text: return text
-                    # 0. Strip markdown bold titles/meta-headers (e.g. **Initiating the Session Flow**, **Confirming Response Generation**)
+                    # 0. Strip markdown bold titles/meta-headers and role intro declarations
                     text = re.sub(r'\*\*.*?\*\*\s*', '', text)
-                    text = re.sub(r'^(?:I\'m\s+starting|Initiating|Confirming|I\'ve\s+completed)[^.:!?]*[.:!?]\s*', '', text, flags=re.IGNORECASE)
+                    text = re.sub(r'^(?:As\s+a\s+Levantine[^.:!?]*[.:!?]\s*|I\'m\s+following[^.:!?]*[.:!?]\s*|I\'ll\s+be\s+speaking[^.:!?]*[.:!?]\s*|Initiating|Confirming)[^.:!?]*[.:!?]\s*', '', text, flags=re.IGNORECASE)
                     # 1. Marhabatayn variants (ending with tain, tein, tyn, dain, dein, ten, taine, etc.)
                     text = re.sub(r'\b[Mm][a-z0-9]{1,7}b[a-z]{0,3}[td][aie]{1,2}n?e?\b', 'مَرْحَبَتيْن', text, flags=re.IGNORECASE)
                     # 2. Marhaba variants (ending with ban, ban., ba, a, an)
