@@ -300,72 +300,8 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                 ai_recognizer.session_stopped.connect(ai_session_stopped_cb)
                 
                 ai_recognizer.start_continuous_recognition_async()
-                
-                user_stream_format = speechsdk.audio.AudioStreamFormat(samples_per_second=16000, bits_per_sample=16, channels=1)
-                user_push_stream = speechsdk.audio.PushAudioInputStream(stream_format=user_stream_format)
-                user_audio_config = speechsdk.audio.AudioConfig(stream=user_push_stream)
-                user_speech_config = speechsdk.SpeechConfig(subscription=azure_key, region=azure_region)
-                user_auto_detect = speechsdk.languageconfig.AutoDetectSourceLanguageConfig(languages=["ar-JO", "en-US"])
-                user_recognizer = speechsdk.SpeechRecognizer(
-                    speech_config=user_speech_config,
-                    auto_detect_source_language_config=user_auto_detect,
-                    audio_config=user_audio_config
-                )
-                
-                def user_recognizing_cb(evt):
-                    if not evt.result.text: return
-                    text = post_process_transcript(evt.result.text)
-                    msg = {"type": "transcript_partial", "text": text, "id": user_bubble_id, "role": "user"}
-                    asyncio.run_coroutine_threadsafe(websocket.send_json(msg), loop)
-                    safe_print(f"[Live] User partial transcript: {text}")
-                    
-                def user_recognized_cb(evt):
-                    nonlocal user_bubble_id
-                    if not evt.result.text: return
-                    text = post_process_transcript(evt.result.text)
-                    msg = {"type": "transcript", "text": text, "id": user_bubble_id, "role": "user"}
-                    asyncio.run_coroutine_threadsafe(websocket.send_json(msg), loop)
-                    safe_print(f"[Live] User final transcript: {text}")
-                    user_bubble_id = str(uuid.uuid4())
-                    
-                    # User turn complete
-                    safe_print(f"[Live] End of user audio turn for: {text}")
-                    
-                def user_canceled_cb(evt):
-                    safe_print(f"[Live][ERROR] User STT Canceled: {evt.reason}")
-                    if evt.reason == speechsdk.CancellationReason.Error:
-                        safe_print(f"[Live][ERROR] User STT Error Details: {evt.error_details}")
-
-                def user_session_started_cb(evt):
-                    safe_print(f"[Live] User STT Session Started: {evt.session_id}")
-
-                def user_session_stopped_cb(evt):
-                    safe_print(f"[Live] User STT Session Stopped: {evt.session_id}")
-
-                user_recognizer.recognizing.connect(user_recognizing_cb)
-                user_recognizer.recognized.connect(user_recognized_cb)
-                user_recognizer.canceled.connect(user_canceled_cb)
-                user_recognizer.session_started.connect(user_session_started_cb)
-                user_recognizer.session_stopped.connect(user_session_stopped_cb)
-                
                 # Biasing Azure STT to the specific Arabic target words
                 ai_phrase_list = speechsdk.PhraseListGrammar.from_recognizer(ai_recognizer)
-                user_phrase_list = speechsdk.PhraseListGrammar.from_recognizer(user_recognizer)
-
-                # Add core dialect phrases for STT recognizer phrase biasing
-                common_phrases = [
-                    # Day 3 Pronouns
-                    "أنا", "انت", "انتي", "هو", "هوه", "هي", "هيه", "احنا", "انتو", "هم", "همه", "هما", 
-                    "إِنْتَ", "إِنْتِ", "أَنَا", "هُوَّه", "هِيَّه", "إِحْنَا", "إِنْتُو", "هُمَّه",
-                    # Day 1 Greetings & Responses (from PDF)
-                    "مرحبا", "مرحبتين", "مَرْحَبًا", "مَرْحَبَتيْن",
-                    "السلام عليكم", "السَّلَامُ عَلَيْكُم",
-                    "وعليكم السلام", "وَعَلَيْكُمُ السَّلَام",
-                    "يعطيك العافية", "يَعْطِيكَ الْعَافِيَة", "يَعْطِيكِ الْعَافِيَة",
-                    "الله يعافيك", "الله يَعَافِيك", "الله يَعَافِيكِ"
-                ]
-                for phrase in common_phrases:
-                    user_phrase_list.addPhrase(phrase)
 
                 for vocab in vocab_list:
                     arabic_word = vocab.get("target_arabic", "").strip()
@@ -373,14 +309,13 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                         # Strip harakat to match Azure STT base output
                         clean_word = re.sub(r'[\u064B-\u065F\u0670]', '', arabic_word)
                         ai_phrase_list.addPhrase(clean_word)
-                        user_phrase_list.addPhrase(clean_word)
+                        
                         # Optional: also add the alif normalized version
                         normalized_word = re.sub(r'[أإآ]', 'ا', clean_word)
                         if normalized_word != clean_word:
                             ai_phrase_list.addPhrase(normalized_word)
-                            user_phrase_list.addPhrase(normalized_word)
                 
-                user_recognizer.start_continuous_recognition_async()
+
             else:
                 safe_print("[Live] WARNING: AZURE_SPEECH_KEY is missing! Text transcript bubbles are DISABLED.")
 
@@ -396,8 +331,7 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                             break
                         if "bytes" in message and message["bytes"]:
                             if not mic_muted:
-                                if azure_key:
-                                    user_push_stream.write(message["bytes"])
+                                pass # No user STT needed, Gemini processes audio directly
                                 await session.send_realtime_input(
                                     audio=types.Blob(
                                         data=message["bytes"],
