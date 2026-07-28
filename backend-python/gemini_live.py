@@ -163,7 +163,7 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
 
     try:
         async with client.aio.live.connect(
-            model="gemini-2.0-flash-exp",
+            model="gemini-3.1-flash-live-preview",
             config=config
         ) as session:
             safe_print("[Live] Gemini Live connected.")
