@@ -629,8 +629,9 @@
      */
     constructor(config = {}) {
       // Smart Environment Detection: Connect to local python server on localhost, or Render WSS on live production
-      const isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:');
-      
+      // const isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:');
+      const isLocal = false; // Set to false to always use the Render production server
+
       if (isLocal) {
         this.serverUrl = 'ws://localhost:8000';
         console.log('[Live] Running in local environment — connected to ws://localhost:8000');
@@ -882,7 +883,11 @@
 
       const int16 = new Int16Array(bytes.buffer);
       const float32 = new Float32Array(int16.length);
-      for (let i = 0; i < int16.length; i++) float32[i] = int16[i] / 32768.0;
+      const VOLUME_MULTIPLIER = 2.5; // Boost AI voice volume
+      for (let i = 0; i < int16.length; i++) {
+        let val = (int16[i] / 32768.0) * VOLUME_MULTIPLIER;
+        float32[i] = Math.max(-1, Math.min(1, val)); // Clip to prevent distortion
+      }
 
       const buf = this.playCtx.createBuffer(1, float32.length, this.OUTPUT_RATE);
       buf.getChannelData(0).set(float32);
