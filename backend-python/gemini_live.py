@@ -461,6 +461,15 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                             if response.server_content and response.server_content.turn_complete:
                                 safe_print("[Live] Gemini turn complete — unmuting mic")
                                 await websocket.send_json({"type": "turn_complete"})
+                                
+                                # Send a placeholder to reserve the User's bubble position in the DOM chronologically
+                                await websocket.send_json({
+                                    "type": "transcript_partial",
+                                    "text": "...",
+                                    "id": user_bubble_id,
+                                    "role": "user"
+                                })
+                                
                                 if azure_key and ai_push_stream:
                                     # Inject silence to flush/segment the Azure STT utterance
                                     ai_push_stream.write(b'\x00' * (24000 * 2))
