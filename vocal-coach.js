@@ -628,18 +628,15 @@
      * @param {string} [config.transcriptContainerId] - Chat transcript container
      */
     constructor(config = {}) {
-      let defaultServer = 'wss://ai-assistant-course.onrender.com';
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        defaultServer = 'ws://localhost:8000';
-      }
-      this.serverUrl = config.serverUrl || window.LIVE_VOCAL_COACH_SERVER_URL || defaultServer;
+      // Smart Environment Detection: Connect to local python server on localhost, or Render WSS on live production
+      const isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:');
       
-      // Force override localhost URLs to production WSS when hosted on HTTPS or remote domains
-      if (window.location.protocol === 'https:' || (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')) {
-        if (this.serverUrl.includes('localhost')) {
-          console.warn('[Live] Hosted environment detected — overriding localhost URL to wss://ai-assistant-course.onrender.com');
-          this.serverUrl = 'wss://ai-assistant-course.onrender.com';
-        }
+      if (isLocal) {
+        this.serverUrl = 'ws://localhost:8000';
+        console.log('[Live] Running in local environment — connected to ws://localhost:8000');
+      } else {
+        this.serverUrl = config.serverUrl || window.LIVE_VOCAL_COACH_SERVER_URL || 'wss://ai-assistant-course.onrender.com';
+        console.log(`[Live] Running in production environment — connected to ${this.serverUrl}`);
       }
       this.dayId = config.dayId || 'day_1_greetings';
       this.buttonSlotId = config.buttonSlotId || 'vapi-icon-slot';
