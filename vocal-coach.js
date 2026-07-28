@@ -628,9 +628,9 @@
      * @param {string} [config.transcriptContainerId] - Chat transcript container
      */
     constructor(config = {}) {
-      let defaultServer = 'ws://localhost:8000';
-      if (window.location.protocol === 'https:') {
-        defaultServer = 'wss://yalla-arabic-coach.onrender.com';
+      let defaultServer = 'wss://ai-assistant-course.onrender.com';
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        defaultServer = 'ws://localhost:8000';
       }
       this.serverUrl = config.serverUrl || window.LIVE_VOCAL_COACH_SERVER_URL || defaultServer;
       if (window.location.protocol === 'https:' && this.serverUrl.startsWith('ws://localhost')) {

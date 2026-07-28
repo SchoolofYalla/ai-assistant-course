@@ -577,7 +577,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             // Use LiveVocalCoachClient for real-time Gemini Live audio (no Whisper/TTS pipeline)
             const vocalCoach = new LiveVocalCoachClient({
-                serverUrl: 'ws://localhost:8000',
+                serverUrl: 'wss://ai-assistant-course.onrender.com',
                 dayId: 'day_3_pronouns',
                 buttonSlotId: 'vapi-icon-slot',
                 transcriptContainerId: 'transcript-container'
