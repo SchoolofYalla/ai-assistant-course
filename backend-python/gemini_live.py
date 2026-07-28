@@ -123,7 +123,7 @@ YOUR LESSON VOCABULARY LIST:
 {words_text}
 
 CRITICAL MANDATORY RULES:
-1. DO NOT summarize your role, state rules, or say "As a coach...". Jump directly into teaching!
+1. Speak out loud directly to the student in English. DO NOT write meta-comments or descriptions of steps.
 2. Whenever you say "Repeat after me:", you MUST ALWAYS pronounce the target Arabic word immediately after in the SAME CONTINUOUS SPOKEN SENTENCE without stopping early.
 3. Write target Arabic words ONLY in actual Arabic script (مَرْحَبًا, مَرْحَبَتيْن, السَّلَامُ عَلَيْكُم, وَعَلَيْكُمُ السَّلَام, يَعْطِيكَ الْعَافِيَة, الله يَعَافِيك).
 4. ABSOLUTELY NEVER write or speak English transliterations.
@@ -208,9 +208,16 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                 def post_process_transcript(text: str) -> str:
                     """Strictly enforce proper Arabic script for any target Arabic word or phonetic STT mistranscription."""
                     if not text: return text
-                    # 0. Strip markdown bold titles/meta-headers and role intro declarations
+                    # 0. Strip markdown bold titles/meta-headers and meta-thinking sentences
                     text = re.sub(r'\*\*.*?\*\*\s*', '', text)
-                    text = re.sub(r'^(?:As\s+a\s+Levantine[^.:!?]*[.:!?]\s*|I\'m\s+following[^.:!?]*[.:!?]\s*|I\'ll\s+be\s+speaking[^.:!?]*[.:!?]\s*|Initiating|Confirming)[^.:!?]*[.:!?]\s*', '', text, flags=re.IGNORECASE)
+                    sentences = re.split(r'(?<=[.:!?])\s+', text)
+                    clean_sentences = []
+                    for s in sentences:
+                        if re.search(r'\b(?:initiating|confirming|strategic\s+planning|session\s+flow|adhering|confidence\s+is\s+high|rules|established|sequence|focusing\s+on|broken\s+down)\b', s, flags=re.IGNORECASE):
+                            continue
+                        if s.strip():
+                            clean_sentences.append(s.strip())
+                    text = ' '.join(clean_sentences)
                     # 1. Marhabatayn variants (ending with tain, tein, tyn, dain, dein, ten, taine, etc.)
                     text = re.sub(r'\b[Mm][a-z0-9]{1,7}b[a-z]{0,3}[td][aie]{1,2}n?e?\b', 'مَرْحَبَتيْن', text, flags=re.IGNORECASE)
                     # 2. Marhaba variants (ending with ban, ban., ba, a, an)
@@ -408,9 +415,41 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
 
 
 
+                            # Direct Gemini Native Text Stream (Filtered Live AI Chat Bubbles)
+                            if response.server_content and response.server_content.model_turn:
+                                for part in response.server_content.model_turn.parts:
+                                    text_chunk = ""
+                                    if hasattr(part, "text") and part.text:
+                                        text_chunk = part.text
+                                    elif isinstance(part, dict) and part.get("text"):
+                                        text_chunk = part.get("text")
+
+                                    if text_chunk:
+                                        current_ai_text += text_chunk
+                                        processed = post_process_transcript(current_ai_text)
+                                        if processed.strip():
+                                            await websocket.send_json({
+                                                "type": "transcript_partial",
+                                                "text": processed,
+                                                "id": ai_bubble_id,
+                                                "role": "ai"
+                                            })
+
                             # Turn complete — Gemini finished speaking; unmute mic
                             if response.server_content and response.server_content.turn_complete:
                                 safe_print("[Live] Gemini turn complete — unmuting mic")
+                                if current_ai_text.strip():
+                                    final_processed = post_process_transcript(current_ai_text)
+                                    if final_processed.strip():
+                                        await websocket.send_json({
+                                            "type": "transcript",
+                                            "text": final_processed,
+                                            "id": ai_bubble_id,
+                                            "role": "ai"
+                                        })
+                                    current_ai_text = ""
+                                    ai_bubble_id = str(uuid.uuid4())
+
                                 await websocket.send_json({"type": "turn_complete"})
                                 if azure_key and ai_push_stream:
                                     # Inject 1 second of silence to segment the utterance
