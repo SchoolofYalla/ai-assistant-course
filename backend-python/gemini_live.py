@@ -128,7 +128,7 @@ CRITICAL MANDATORY RULES:
 3. Write target Arabic words ONLY in actual Arabic script (مَرْحَبًا, مَرْحَبَتيْن, السَّلَامُ عَلَيْكُم, وَعَلَيْكُمُ السَّلَام, يَعْطِيكَ الْعَافِيَة, الله يَعَافِيك).
 4. ABSOLUTELY NEVER write or speak English transliterations.
 5. Keep feedback and compliments to 1 short sentence.
-
+6. STRICT EVALUATION: The student MUST say the EXACT target Arabic word they were asked to repeat. If they say a different word (e.g. if they say مرحبتين when asked to repeat مَرْحَبًا), you MUST tell them it is incorrect and ask them to try the exact target word again.
 BEGIN NOW:
 Greet the student in English, state what the first word is used for, say "Repeat after me:", and pronounce {first_word} all together in one sentence."""
 
@@ -163,7 +163,7 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
 
     try:
         async with client.aio.live.connect(
-            model="gemini-3.1-flash-live-preview",
+            model="gemini-2.5-flash-native-audio-latest",
             config=config
         ) as session:
             safe_print("[Live] Gemini Live connected.")
