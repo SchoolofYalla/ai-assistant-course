@@ -405,6 +405,18 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                                     "data": b64
                                 })
 
+                            # Direct Gemini Native Text Stream (Fallback for Live Chat Bubbles)
+                            if response.server_content and response.server_content.model_turn:
+                                for part in response.server_content.model_turn.parts:
+                                    if hasattr(part, "text") and part.text:
+                                        text = post_process_transcript(part.text)
+                                        await websocket.send_json({
+                                            "type": "transcript_partial",
+                                            "text": text,
+                                            "id": ai_bubble_id,
+                                            "role": "ai"
+                                        })
+
 
 
                             # Turn complete — Gemini finished speaking; unmute mic
