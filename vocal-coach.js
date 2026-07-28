@@ -633,8 +633,13 @@
         defaultServer = 'ws://localhost:8000';
       }
       this.serverUrl = config.serverUrl || window.LIVE_VOCAL_COACH_SERVER_URL || defaultServer;
-      if (window.location.protocol === 'https:' && this.serverUrl.startsWith('ws://localhost')) {
-        console.warn('[Live] Page is HTTPS but serverUrl is ws://localhost. Switching to secure WSS if available.');
+      
+      // Force override localhost URLs to production WSS when hosted on HTTPS or remote domains
+      if (window.location.protocol === 'https:' || (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')) {
+        if (this.serverUrl.includes('localhost')) {
+          console.warn('[Live] Hosted environment detected — overriding localhost URL to wss://ai-assistant-course.onrender.com');
+          this.serverUrl = 'wss://ai-assistant-course.onrender.com';
+        }
       }
       this.dayId = config.dayId || 'day_1_greetings';
       this.buttonSlotId = config.buttonSlotId || 'vapi-icon-slot';
