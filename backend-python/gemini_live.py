@@ -184,8 +184,8 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
             
             # --- Azure Streaming STT Setup ---
             loop = asyncio.get_running_loop()
-            azure_key = os.getenv("AZURE_SPEECH_KEY")
-            azure_region = os.getenv("AZURE_SPEECH_REGION", "eastus")
+            azure_key = os.getenv("AZURE_SPEECH_KEY", "").strip()
+            azure_region = os.getenv("AZURE_SPEECH_REGION", "eastus").strip()
             
             ai_bubble_id = str(uuid.uuid4())
             user_bubble_id = str(uuid.uuid4())
@@ -195,6 +195,7 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
             user_push_stream = None
 
             if azure_key:
+                safe_print(f"[Live] Azure STT is ENABLED (Region: {azure_region})")
                 ai_stream_format = speechsdk.audio.AudioStreamFormat(samples_per_second=24000, bits_per_sample=16, channels=1)
                 ai_push_stream = speechsdk.audio.PushAudioInputStream(stream_format=ai_stream_format)
                 ai_audio_config = speechsdk.audio.AudioConfig(stream=ai_push_stream)
@@ -281,8 +282,23 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                         safe_print("[Live] Lesson completed — sending session_ended to browser")
                         asyncio.run_coroutine_threadsafe(websocket.send_json({"type": "session_ended"}), loop)
                     
+                def ai_canceled_cb(evt):
+                    safe_print(f"[Live][ERROR] AI STT Canceled: {evt.reason}")
+                    if evt.reason == speechsdk.CancellationReason.Error:
+                        safe_print(f"[Live][ERROR] AI STT Error Details: {evt.error_details}")
+
+                def ai_session_started_cb(evt):
+                    safe_print(f"[Live] AI STT Session Started: {evt.session_id}")
+
+                def ai_session_stopped_cb(evt):
+                    safe_print(f"[Live] AI STT Session Stopped: {evt.session_id}")
+
                 ai_recognizer.recognizing.connect(ai_recognizing_cb)
                 ai_recognizer.recognized.connect(ai_recognized_cb)
+                ai_recognizer.canceled.connect(ai_canceled_cb)
+                ai_recognizer.session_started.connect(ai_session_started_cb)
+                ai_recognizer.session_stopped.connect(ai_session_stopped_cb)
+                
                 ai_recognizer.start_continuous_recognition_async()
                 
                 user_stream_format = speechsdk.audio.AudioStreamFormat(samples_per_second=16000, bits_per_sample=16, channels=1)
@@ -315,8 +331,22 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                     # User turn complete
                     safe_print(f"[Live] End of user audio turn for: {text}")
                     
+                def user_canceled_cb(evt):
+                    safe_print(f"[Live][ERROR] User STT Canceled: {evt.reason}")
+                    if evt.reason == speechsdk.CancellationReason.Error:
+                        safe_print(f"[Live][ERROR] User STT Error Details: {evt.error_details}")
+
+                def user_session_started_cb(evt):
+                    safe_print(f"[Live] User STT Session Started: {evt.session_id}")
+
+                def user_session_stopped_cb(evt):
+                    safe_print(f"[Live] User STT Session Stopped: {evt.session_id}")
+
                 user_recognizer.recognizing.connect(user_recognizing_cb)
                 user_recognizer.recognized.connect(user_recognized_cb)
+                user_recognizer.canceled.connect(user_canceled_cb)
+                user_recognizer.session_started.connect(user_session_started_cb)
+                user_recognizer.session_stopped.connect(user_session_stopped_cb)
                 
                 # Biasing Azure STT to the specific Arabic target words
                 ai_phrase_list = speechsdk.PhraseListGrammar.from_recognizer(ai_recognizer)
@@ -351,6 +381,8 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                             user_phrase_list.addPhrase(normalized_word)
                 
                 user_recognizer.start_continuous_recognition_async()
+            else:
+                safe_print("[Live] WARNING: AZURE_SPEECH_KEY is missing! Text transcript bubbles are DISABLED.")
 
             async def forward_mic_to_gemini():
                 """Forward browser binary PCM chunks to Gemini Live in real-time.
