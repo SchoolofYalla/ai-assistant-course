@@ -628,7 +628,14 @@
      * @param {string} [config.transcriptContainerId] - Chat transcript container
      */
     constructor(config = {}) {
-      this.serverUrl = config.serverUrl || 'ws://localhost:8000';
+      let defaultServer = 'ws://localhost:8000';
+      if (window.location.protocol === 'https:') {
+        defaultServer = 'wss://yalla-arabic-coach.onrender.com';
+      }
+      this.serverUrl = config.serverUrl || window.LIVE_VOCAL_COACH_SERVER_URL || defaultServer;
+      if (window.location.protocol === 'https:' && this.serverUrl.startsWith('ws://localhost')) {
+        console.warn('[Live] Page is HTTPS but serverUrl is ws://localhost. Switching to secure WSS if available.');
+      }
       this.dayId = config.dayId || 'day_1_greetings';
       this.buttonSlotId = config.buttonSlotId || 'vapi-icon-slot';
       this.transcriptContainerId = config.transcriptContainerId || 'transcript-container';
