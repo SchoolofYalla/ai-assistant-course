@@ -114,31 +114,19 @@ def build_system_prompt(vocab_list: list) -> str:
         for i, w in enumerate(vocab_list)
     ])
 
-    return f"""You are a warm, encouraging Levantine Arabic pronunciation coach for School of Yalla.
+    return f"""You are a warm Levantine Arabic pronunciation coach for School of Yalla.
 
-Your job today is to teach the student these words one by one, clearly explaining what each word is used for (e.g. casual greeting, formal response, to a male, to a female) before asking them to repeat:
+Teach the student these words one by one:
 {words_text}
 
-SESSION FLOW — CRITICAL:
-1. Greet the student in English, state what the first word is used for (e.g. "First, the casual greeting:"), say "Repeat after me:", AND pronounce the FIRST Arabic word ALL TOGETHER IN ONE SINGLE CONTINUOUS SPOKEN SENTENCE without pausing or ending your turn early.
-2. Listen to the student repeat it.
-3. Evaluate their attempt:
-   - CORRECT: Say a brief English compliment (e.g. "Great job!"), state what the NEXT word is used for (e.g. "Now the casual response:"), then say "Repeat after me:" followed immediately by the NEXT Arabic word in the SAME continuous turn.
-   - INCORRECT: Give a brief 1-sentence English correction, then say "Let me model it again for you:" followed immediately by the target Arabic word.
-4. After all words in the lesson are completed, warmly congratulate the student in English, say goodbye clearly, and state that the lesson is now complete.
+MANDATORY RULES:
+1. Speak out loud directly to the student in English.
+2. State what the word is used for (e.g. casual greeting, formal response, to a male, to a female), say "Repeat after me:", and pronounce the target Arabic word slowly and clearly.
+3. Evaluate their attempt. If correct, compliment them and move to the next word. If incorrect, model it again.
+4. Write target Arabic words ONLY in actual Arabic script (e.g. مَرْحَبًا, مَرْحَبَتيْن, السَّلَامُ عَلَيْكُم, وَعَلَيْكُمُ السَّلَام, يَعْطِيكَ الْعَافِيَة, الله يَعَافِيك).
+5. ABSOLUTELY NEVER output internal thoughts, meta-narration, stage directions, or descriptions of rules. ONLY speak your exact out-loud dialog to the student.
 
-CRITICAL SCRIPT & PRONUNCIATION RULES:
-- ALWAYS explain what each word is used for (casual, formal, response, male/female) exactly as listed in the School of Yalla lesson guide.
-- ALWAYS write target Arabic words ONLY in actual Arabic script (e.g. مَرْحَبًا, مَرْحَبَتيْن, السَّلَامُ عَلَيْكُم, وَعَلَيْكُمُ السَّلَام, يَعْطِيكَ الْعَافِيَة, الله يَعَافِيك).
-- ABSOLUTELY NEVER write or output English transliterations under any circumstances.
-- Speak Arabic words slowly, clearly, with correct Levantine dialect pronunciation.
-
-STYLE RULES - ABSOLUTELY MANDATORY:
-- NEVER output internal thoughts, stage directions, or narration.
-- Speak directly and naturally to the user as if on a voice call. ONLY output the exact words you want to say out loud.
-- Keep explanations very SHORT and clear — maximum 2 short sentences per turn.
-
-START NOW — greet the student in English, explain the usage of the first word, and say the first Arabic word in ONE continuous turn."""
+START NOW — greet the student in English and speak the first word."""
 
 
 async def run_live_session(websocket: WebSocket, vocab_list: list):
@@ -216,6 +204,8 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                 def post_process_transcript(text: str) -> str:
                     """Strictly enforce proper Arabic script for any target Arabic word or phonetic STT mistranscription."""
                     if not text: return text
+                    # 0. Strip markdown bold titles/meta-headers (e.g. **Initiating the Session Flow**)
+                    text = re.sub(r'\*\*.*?\*\*\s*', '', text)
                     # 1. Marhabatayn variants (ending with tain, tein, tyn, dain, dein, ten, taine, etc.)
                     text = re.sub(r'\b[Mm][a-z0-9]{1,7}b[a-z]{0,3}[td][aie]{1,2}n?e?\b', 'مَرْحَبَتيْن', text, flags=re.IGNORECASE)
                     # 2. Marhaba variants (ending with ban, ban., ba, a, an)
@@ -407,24 +397,7 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                                     "data": b64
                                 })
 
-                            # Direct Gemini Native Text Stream (Live Chat Bubbles)
-                            if response.server_content and response.server_content.model_turn:
-                                for part in response.server_content.model_turn.parts:
-                                    text_chunk = ""
-                                    if hasattr(part, "text") and part.text:
-                                        text_chunk = part.text
-                                    elif isinstance(part, dict) and part.get("text"):
-                                        text_chunk = part.get("text")
 
-                                    if text_chunk:
-                                        current_ai_text += text_chunk
-                                        processed = post_process_transcript(current_ai_text)
-                                        await websocket.send_json({
-                                            "type": "transcript_partial",
-                                            "text": processed,
-                                            "id": ai_bubble_id,
-                                            "role": "ai"
-                                        })
 
                             # Turn complete — Gemini finished speaking; unmute mic
                             if response.server_content and response.server_content.turn_complete:
