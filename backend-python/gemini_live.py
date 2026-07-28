@@ -204,8 +204,9 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                 def post_process_transcript(text: str) -> str:
                     """Strictly enforce proper Arabic script for any target Arabic word or phonetic STT mistranscription."""
                     if not text: return text
-                    # 0. Strip markdown bold titles/meta-headers (e.g. **Initiating the Session Flow**)
+                    # 0. Strip markdown bold titles/meta-headers (e.g. **Initiating the Session Flow**, **Confirming Response Generation**)
                     text = re.sub(r'\*\*.*?\*\*\s*', '', text)
+                    text = re.sub(r'^(?:I\'m\s+starting|Initiating|Confirming|I\'ve\s+completed)[^.:!?]*[.:!?]\s*', '', text, flags=re.IGNORECASE)
                     # 1. Marhabatayn variants (ending with tain, tein, tyn, dain, dein, ten, taine, etc.)
                     text = re.sub(r'\b[Mm][a-z0-9]{1,7}b[a-z]{0,3}[td][aie]{1,2}n?e?\b', 'مَرْحَبَتيْن', text, flags=re.IGNORECASE)
                     # 2. Marhaba variants (ending with ban, ban., ba, a, an)
@@ -412,8 +413,7 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                                     elif isinstance(part, dict) and part.get("text"):
                                         text_chunk = part.get("text")
 
-                                    # Filter out internal meta-thinking / stage directions
-                                    if text_chunk and not re.search(r'\*\*|initiating|confirming|strategic\s+planning|session\s+flow|adhering|confidence\s+is\s+high', text_chunk, flags=re.IGNORECASE):
+                                    if text_chunk:
                                         current_ai_text += text_chunk
                                         processed = post_process_transcript(current_ai_text)
                                         if processed.strip():
