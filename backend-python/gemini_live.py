@@ -277,8 +277,12 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                 user_push_stream = speechsdk.audio.PushAudioInputStream(stream_format=user_stream_format)
                 user_audio_config = speechsdk.audio.AudioConfig(stream=user_push_stream)
                 user_speech_config = speechsdk.SpeechConfig(subscription=azure_key, region=azure_region)
-                user_speech_config.speech_recognition_language = "ar-JO"
-                user_recognizer = speechsdk.SpeechRecognizer(speech_config=user_speech_config, audio_config=user_audio_config)
+                user_auto_detect = speechsdk.languageconfig.AutoDetectSourceLanguageConfig(languages=["ar-JO", "en-US"])
+                user_recognizer = speechsdk.SpeechRecognizer(
+                    speech_config=user_speech_config,
+                    auto_detect_source_language_config=user_auto_detect,
+                    audio_config=user_audio_config
+                )
                 
                 def user_recognizing_cb(evt):
                     if not evt.result.text: return
@@ -399,10 +403,31 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
 
 
 
+                            # Direct Gemini Native Text Stream (Live AI Dialogue Bubbles)
+                            if response.server_content and response.server_content.model_turn:
+                                for part in response.server_content.model_turn.parts:
+                                    text_chunk = ""
+                                    if hasattr(part, "text") and part.text:
+                                        text_chunk = part.text
+                                    elif isinstance(part, dict) and part.get("text"):
+                                        text_chunk = part.get("text")
+
+                                    # Filter out internal meta-thinking / stage directions
+                                    if text_chunk and not re.search(r'\*\*|initiating|confirming|strategic\s+planning|session\s+flow|adhering|confidence\s+is\s+high', text_chunk, flags=re.IGNORECASE):
+                                        current_ai_text += text_chunk
+                                        processed = post_process_transcript(current_ai_text)
+                                        if processed.strip():
+                                            await websocket.send_json({
+                                                "type": "transcript_partial",
+                                                "text": processed,
+                                                "id": ai_bubble_id,
+                                                "role": "ai"
+                                            })
+
                             # Turn complete — Gemini finished speaking; unmute mic
                             if response.server_content and response.server_content.turn_complete:
                                 safe_print("[Live] Gemini turn complete — unmuting mic")
-                                if current_ai_text:
+                                if current_ai_text.strip():
                                     final_processed = post_process_transcript(current_ai_text)
                                     await websocket.send_json({
                                         "type": "transcript",
