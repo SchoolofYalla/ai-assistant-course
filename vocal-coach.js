@@ -797,9 +797,6 @@
 
         case 'transcript_partial':
           this._addBubble(msg.role, msg.text, msg.id, false);
-          if (msg.role === 'user') {
-            this._clearAudioBuffer();
-          }
           break;
 
         case 'user_transcript':
