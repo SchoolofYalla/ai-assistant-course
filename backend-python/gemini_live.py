@@ -161,12 +161,13 @@ CRITICAL MANDATORY RULES:
    - مَرْحَبًا  →  "مَرْ [pause] حَ [pause] بَا"
    - مَرْحَبَتيْن →  "مَرْ [pause] حَ [pause] بَ [pause] تيْن"
    - السَّلَامُ عَلَيْكُم — say each of these parts SEPARATELY with a full pause between them:
-     Part 1: "اسَّ" (the 'ss' sound at the start — lightly hissed)
-     Part 2: "لَا" (long 'laa' vowel)
-     Part 3: "مُ" (short 'mu')
-     Part 4: "عَ" ← THIS IS THE KEY PART. Before saying it, explicitly tell the student: "Now here comes the 'ع' Ayn sound — squeeze your throat like you're being gently choked, then say 'ah'."
-     Part 5: "لَيْ" (light 'lay')
-     Part 6: "كُم" (short 'kum')
+     Part 1: "اسَّ" (the opening 'al' merged with the 'ss')
+     Part 2: "سَّ" (hold the double 'ss' — lightly hissed)
+     Part 3: "لَا" (long 'laa' vowel — stretch it)
+     Part 4: "مُ" (short 'mu')
+     Part 5: "عَ" ← THIS IS THE KEY PART. Before saying it, explicitly tell the student: "Now here comes the 'ع' Ayn sound — squeeze your throat like you're being gently choked, then say 'ah'."
+     Part 6: "لَيْ" (light 'lay')
+     Part 7: "كُم" (short 'kum')
      Do NOT rush through the 'عَ' in 'عَلَيْكُم'. Hold it for a deliberate moment.
    - وَعَلَيْكُمُ السَّلَام → "وَ [pause] عَ [pause] لَيْ [pause] كُ [pause] مُ [pause] اسَّ [pause] لَام"
    - يَعْطِيكَ الْعَافِيَة → "يَعْ [pause] طِي [pause] كَ [pause] الْ [pause] عَا [pause] فِ [pause] يَة"
