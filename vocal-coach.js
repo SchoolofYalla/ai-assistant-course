@@ -629,8 +629,8 @@
      */
     constructor(config = {}) {
       // Smart Environment Detection: Connect to local python server on localhost, or Render WSS on live production
-      // const isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:');
-      const isLocal = false; // Set to false to always use the Render production server
+      const isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:');
+      // const isLocal = false; // Set to false to always use the Render production server
 
       if (isLocal) {
         this.serverUrl = 'ws://localhost:8000';
@@ -833,7 +833,8 @@
 
         this.scriptProc.onaudioprocess = (e) => {
           if (!this.isStreaming || !this.ws || this.ws.readyState !== WebSocket.OPEN) return;
-          if (this.geminiSpeaking) return;  // silence mic while AI speaks — prevents echo
+          // Audio is always streamed so the user can interrupt the AI.
+          // Echo cancellation is handled by the browser's getUserMedia.
           const float32 = e.inputBuffer.getChannelData(0);
           const resampled = this._downsample(float32, this.nativeRate, this.targetRate);
           const int16 = this._float32ToInt16(resampled);
