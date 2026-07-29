@@ -363,10 +363,10 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                 user_push_stream = speechsdk.audio.PushAudioInputStream(stream_format=user_stream_format)
                 user_audio_config = speechsdk.audio.AudioConfig(stream=user_push_stream)
                 user_speech_config = speechsdk.SpeechConfig(subscription=azure_key, region=azure_region)
-                user_auto_detect = speechsdk.languageconfig.AutoDetectSourceLanguageConfig(languages=["ar-JO", "en-US"])
+                # LOCKED to ar-JO: forces pure Arabic script output so 'ح' vs 'ه' detection is unambiguous
+                user_speech_config.speech_recognition_language = "ar-JO"
                 user_recognizer = speechsdk.SpeechRecognizer(
                     speech_config=user_speech_config,
-                    auto_detect_source_language_config=user_auto_detect,
                     audio_config=user_audio_config
                 )
                 
@@ -380,14 +380,43 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                 def user_recognized_cb(evt):
                     nonlocal user_bubble_id
                     if not evt.result.text: return
-                    text = post_process_transcript(evt.result.text)
+                    raw_text = evt.result.text
+                    text = post_process_transcript(raw_text)
                     msg = {"type": "transcript", "text": text, "id": user_bubble_id, "role": "user"}
                     asyncio.run_coroutine_threadsafe(websocket.send_json(msg), loop)
                     safe_print(f"[Live] User final transcript: {text}")
                     user_bubble_id = str(uuid.uuid4())
-                    
-                    # User turn complete
-                    safe_print(f"[Live] End of user audio turn for: {text}")
+
+                    # ── STRICT HAA GATEKEEPER ──────────────────────────────────────────
+                    # Azure STT outputs pure Arabic script (ar-JO locked).
+                    # If the student said a soft 'ه' instead of the real throat 'ح',
+                    # Azure writes 'ه' in the transcript. We intercept that here and
+                    # force Gemini to fail the student before it evaluates anything.
+                    has_soft_h = 'ه' in raw_text and 'ح' not in raw_text
+
+                    if has_soft_h:
+                        user_turn_prompt = (
+                            f"The student tried to say the target word but used a soft 'ه' sound instead "
+                            f"of the deep throat 'ح' (Haa). They said: '{text}'. "
+                            "You MUST fail them immediately. Explain clearly that 'ح' is NOT a soft 'h' — "
+                            "it must come deep from the throat (حلق) like breathing through a very tight tube. "
+                            "Demonstrate the 'ح' sound slowly, then ask them to try again."
+                        )
+                        safe_print(f"[Live] HAA GATEKEEPER triggered — soft ه detected in: {raw_text}")
+                    else:
+                        user_turn_prompt = f"The student said: '{text}'. Evaluate their pronunciation."
+
+                    safe_print(f"[Live] Sending turn to Gemini: {user_turn_prompt[:80]}...")
+                    asyncio.run_coroutine_threadsafe(
+                        session.send_client_content(
+                            turns=[types.Content(
+                                role="user",
+                                parts=[types.Part(text=user_turn_prompt)]
+                            )],
+                            turn_complete=True
+                        ),
+                        loop
+                    )
                     
                 def user_canceled_cb(evt):
                     safe_print(f"[Live][ERROR] User STT Canceled: {evt.reason}")
