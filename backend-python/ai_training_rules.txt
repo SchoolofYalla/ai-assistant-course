@@ -1,0 +1,21 @@
+# ============================================================
+# AI VOICE COACH — LIVE TRAINER OBSERVATIONS
+# ============================================================
+# PURPOSE:
+#   This file is for NEW behavioral corrections observed during testing.
+#   The core structural rules (pacing, vocabulary order, Haa/Ayn
+#   evaluation, etc.) are already enforced in the system prompt.
+#
+# HOW TO ADD A NEW RULE:
+#   1. Write your observation below (plain English is fine).
+#   2. Save the file.
+#   3. Restart the session — the AI picks it up automatically.
+#   4. Do NOT duplicate rules that already exist in the system prompt.
+#
+# FORMAT:
+#   TRAINING RULE N (Short Title):
+#   Description of what to do / not to do.
+# ============================================================
+
+# ADD NEW TRAINER OBSERVATIONS BELOW THIS LINE:
+

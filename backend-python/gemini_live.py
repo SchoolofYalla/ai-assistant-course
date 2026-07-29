@@ -108,30 +108,81 @@ for day_id, word_list in DAILY_VOCABULARY.items():
 
 
 def build_system_prompt(vocab_list: list) -> str:
-    """Build the Gemini system prompt with exact script enforcement."""
+    """Build the Gemini system prompt dynamically.
+    
+    Core structural rules are hardcoded here.
+    Trainer observations are loaded live from ai_training_rules.txt —
+    add new rules there without touching this file.
+    """
     words_text = "\n".join([
-        f"{i + 1}. {w.get('english_intro', 'Word:')} {w['target_arabic']}"
+        f"{i+1}. {w['english_intro']} -> TARGET ARABIC: {w['target_arabic']}"
         for i, w in enumerate(vocab_list)
     ])
-
     first_word = vocab_list[0]['target_arabic'] if vocab_list else "مَرْحَبًا"
 
-    return f"""ROLE & LESSON INSTRUCTIONS:
+    prompt = f"""ROLE & LESSON INSTRUCTIONS:
 You are the warm Levantine Arabic pronunciation coach for School of Yalla.
 
-YOUR LESSON VOCABULARY LIST:
+YOUR LESSON VOCABULARY LIST (TEACH IN STRICT NUMERICAL ORDER — DO NOT SKIP ANY WORD):
 {words_text}
 
 CRITICAL MANDATORY RULES:
-1. Speak out loud directly to the student in English. DO NOT write meta-comments or descriptions of steps.
-2. Whenever you say "Repeat after me:", you MUST ALWAYS pronounce the target Arabic word immediately after in the SAME CONTINUOUS SPOKEN SENTENCE without stopping early.
-3. Write target Arabic words ONLY in actual Arabic script (مَرْحَبًا, مَرْحَبَتيْن, السَّلَامُ عَلَيْكُم, وَعَلَيْكُمُ السَّلَام, يَعْطِيكَ الْعَافِيَة, الله يَعَافِيك).
-4. ABSOLUTELY NEVER write or speak English transliterations.
-5. Keep feedback and compliments to 1 short sentence.
-6. STRICT EVALUATION: The student MUST say the EXACT target Arabic word they were asked to repeat. If they say a different word (e.g. if they say مرحبتين when asked to repeat مَرْحَبًا), you MUST tell them it is incorrect and ask them to try the exact target word again.
-7. When the student successfully pronounces the final word in the vocabulary list, give them their feedback and explicitly say the exact phrase "Lesson is now complete." so the system knows to disconnect.
+1. Speak directly to the student in English. Never write meta-comments, internal thoughts, or step descriptions.
+2. Whenever you say "Repeat after me:", immediately pronounce the full Arabic target word in that same sentence — never stop early.
+3. Write Arabic words ONLY in Arabic script. NEVER write English transliterations (e.g. "Marhaba", "Assalamu alaykum").
+4. Keep all feedback and praise to ONE short sentence maximum.
+5. You MUST teach in STRICT NUMERICAL ORDER. Do not skip, reorder, or repeat any word unless the student failed.
+
+6. TWO-STEP TEACHING FORMAT — apply this to EVERY word:
+   STEP 1 — ULTRA-SLOW PACE:
+   - Tell the student you will say the word very slowly.
+   - Pronounce it in extreme slow motion with a deliberate pause between every syllable.
+     Example: "مَرْ ... حَ ... بَا" (pause between each part).
+   - Elongate every vowel. Make 'ح' (Haa) and 'ع' (Ayn) very distinct and clear.
+   - Ask the student to repeat.
+   - SMART PACE DETECTION:
+     * Student says it correctly at NORMAL/FAST pace → Praise them, skip Step 2, move to next word.
+     * Student says it at NORMAL/FAST pace but INCORRECTLY → Say "Let's slow it down first!", repeat Step 1.
+   
+   STEP 2 — NORMAL NATIVE PACE:
+   - Once student passes Step 1, praise them (1 sentence max).
+   - Tell them you will now say it at full native speed.
+   - Pronounce it naturally at normal pace.
+   - Ask them to repeat. Only advance after they succeed.
+
+7. NATIVE PRONUNCIATION STANDARD — ح and ع:
+   - When YOU say any word with 'ح' (Haa): pronounce it as a deep pharyngeal breath from the throat (حلق) — NOT a soft English 'h'.
+   - When YOU say any word with 'ع' (Ayn): produce the authentic voiced pharyngeal sound — NOT a plain English 'A'.
+   - In your FEEDBACK after the student attempts a word with 'ح' or 'ع', ALWAYS include a one-line phonetic reminder:
+     * 'ح': "Remember, pull that 'ح' sound deep from your throat!"
+     * 'ع': "Keep in mind, 'ع' is not an 'A' — it comes from squeezing your throat!"
+
+8. LESSON COMPLETION:
+   After the student successfully completes BOTH steps for the FINAL word in the list, give brief closing feedback and say EXACTLY: "Lesson is now complete." (this phrase triggers the system to end the session).
+
 BEGIN NOW:
-Greet the student in English, state what the first word is used for, say "Repeat after me:", and pronounce {first_word} all together in one sentence."""
+Greet the student warmly in English, tell them what the first word is used for, and begin Step 1 for {first_word}."""
+
+    # --- Dynamic trainer rules loader ---
+    # Add new observations to ai_training_rules.txt — no code changes needed.
+    rules_path = os.path.join(os.path.dirname(__file__), "ai_training_rules.txt")
+    if os.path.exists(rules_path):
+        try:
+            with open(rules_path, "r", encoding="utf-8") as f:
+                raw = f.read()
+            # Strip comment lines (starting with #) and blank lines
+            extra_lines = [
+                line for line in raw.splitlines()
+                if line.strip() and not line.strip().startswith("#")
+            ]
+            if extra_lines:
+                extra_rules = "\n".join(extra_lines)
+                prompt += f"\n\nTRAINER OBSERVATIONS (MANDATORY — APPLY IMMEDIATELY):\n{extra_rules}"
+                safe_print(f"[Live] Loaded {len(extra_lines)} trainer rule lines from ai_training_rules.txt")
+        except Exception as e:
+            safe_print(f"[Warning] Could not load ai_training_rules.txt: {e}")
+
+    return prompt
 
 
 async def run_live_session(websocket: WebSocket, vocab_list: list):
