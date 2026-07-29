@@ -487,13 +487,9 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                         if "bytes" in message and message["bytes"]:
                             if not mic_muted:
                                 if azure_key:
+                                    # Route ONLY to Azure STT — the Gatekeeper sends a text turn to Gemini
+                                    # after evaluating the transcript. Gemini never receives raw audio bytes.
                                     user_push_stream.write(message["bytes"])
-                                await session.send_realtime_input(
-                                    audio=types.Blob(
-                                        data=message["bytes"],
-                                        mime_type="audio/pcm;rate=16000"
-                                    )
-                                )
                         elif "text" in message:
                             try:
                                 data = json.loads(message["text"])
