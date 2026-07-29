@@ -173,21 +173,22 @@ CRITICAL MANDATORY RULES:
      Part 3: "تَيْن" (light 'teen' — this is what makes it 'double hello')
 
    - السَّلَامُ عَلَيْكُم — say each of these parts SEPARATELY with a full pause between them:
-     Part 1: "اسَّ" (the opening 'al' merged with the 'ss')
-     Part 2: "سَلَا" (long 'slaa' vowel — stretch it)
-     Part 3: "مُ" (short 'mu')
-     Part 4: "عَ" ← THIS IS THE KEY PART. (CRITICAL: Do NOT pronounce this as an English 'A' or 'ah'. Squeeze your throat to make a deep Arabic 'ع' Ayn sound). Tell the student: "Now here comes the 'ع' Ayn sound — squeeze your throat like you're being gently choked, then say 'ah'."
-     Part 5: "لَيْ" (light 'lay')
-     Part 6: "كُم" (short 'kum')
+     Part 1: "أَسْ" (the opening 'as')
+     Part 2: "سَ" (short 'sa')
+     Part 3: "لَا" (long 'laa' vowel)
+     Part 4: "مُ" (short 'mu')
+     Part 5: "عَ" ← THIS IS THE KEY PART. (CRITICAL: Do NOT say the English letter 'A'. Say the Arabic sound 'عَ'). Tell the student: "Now here comes the 'ع' Ayn sound — squeeze your throat like you're being gently choked, then say 'ah'."
+     Part 6: "لَيْ" (light 'lay')
+     Part 7: "كُم" (short 'kum')
      Do NOT rush through the 'عَ' in 'عَلَيْكُم'. Hold it for a deliberate moment.
 
    - وَعَلَيْكُمُ السَّلَام — say each of these parts SEPARATELY with a full pause between them:
      Part 1: "وَ" (short 'wa')
-     Part 2: "عَ" ← THIS IS THE KEY PART. (CRITICAL: Do NOT pronounce this as an English 'A' or 'ah'. Squeeze your throat to make a deep Arabic 'ع' Ayn sound). Before saying it, explicitly tell the student: "Now here comes the 'ع' Ayn sound — squeeze your throat like you're being gently choked, then say 'ah'."
+     Part 2: "عَ" ← THIS IS THE KEY PART. (CRITICAL: Do NOT say the English letter 'A'. Say the Arabic sound 'عَ'). Before saying it, explicitly tell the student: "Now here comes the 'ع' Ayn sound — squeeze your throat like you're being gently choked, then say 'ah'."
      Part 3: "لَيْ" (light 'lay')
      Part 4: "كُم" (short 'kum')
-     Part 5: "اسَّ" (lightly hissed 'ss')
-     Part 6: "سَ" (lightly hissed 'sa')
+     Part 5: "أَسْ" (short 'as')
+     Part 6: "سَ" (short 'sa')
      Part 7: "لَام" (long 'laam')
 
    - يَعْطِيكْ الْعَافِيَة (to a male) — say each of these parts SEPARATELY with a full pause between them:
