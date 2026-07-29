@@ -24,3 +24,6 @@ When teaching words with 'ع', the AI's pronunciation of 'ع' was slightly off. 
 
 TRAINING RULE 2 (السلام عليكم Slow Pace):
 The AI was not breaking السلام عليكم into syllables correctly during slow pace. The correct breakdown is: "اسَّ ... لَا ... مُ ... عَ ... لَيْ ... كُم". The 'ع' in عَلَيْكُم must be held for a full second and modelled with a distinct throat constriction sound, not rushed past.
+
+TRAINING RULE 3 (Strict Levantine Phonology for Phonetics):
+The AI must NEVER pronounce Arabic syllables or the 'ع' using an English or American accent. Even when breaking a word down phonetically, every syllable must be read as a native Arabic Levantine sound. The 'ع' must always be a deep throat squeeze, never a normal English 'A'.
