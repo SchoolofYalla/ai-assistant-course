@@ -19,3 +19,8 @@
 
 # ADD NEW TRAINER OBSERVATIONS BELOW THIS LINE:
 
+TRAINING RULE 1 (Ayn ع Pronunciation):
+When teaching words with 'ع', the AI's pronunciation of 'ع' was slightly off. It must NOT sound like a plain English 'A' or 'ah'. The 'ع' (Ayn) is a voiced pharyngeal sound — the student should feel their throat squeeze/constrict. Describe it as "squeeze your throat like you're being lightly choked". Always model it with exaggerated throat constriction in slow pace.
+
+TRAINING RULE 2 (السلام عليكم Slow Pace):
+The AI was not breaking السلام عليكم into syllables correctly during slow pace. The correct breakdown is: "الْ ... سَّ ... لَا ... مُ ... عَ ... لَيْ ... كُم". The 'ع' in عَلَيْكُم must be held for a full second and modelled with a distinct throat constriction sound, not rushed past.
