@@ -158,15 +158,20 @@ CRITICAL MANDATORY RULES:
      * 'ع': "That 'ع' is not an 'A'! Squeeze your throat like you're being lightly choked to get that sound!"
 
    WORD-SPECIFIC SLOW-PACE SYLLABLE GUIDE (use these EXACT breakdowns in Step 1):
-   - مَرْحَبًا  →  "مَرْ ... حَ ... بَا"
-   - مَرْحَبَتيْن →  "مَرْ ... حَ ... بَ ... تيْن"
-   - السَّلَامُ عَلَيْكُم →  "الْ ... سَّ ... لَا ... مُ ... عَ ... لَيْ ... كُم"
-     (pay special attention to the 'ع' in عَلَيْكُم — hold it for a full second to model it correctly)
-   - وَعَلَيْكُمُ السَّلَام → "وَ ... عَ ... لَيْ ... كُ ... مُ ... الْ ... سَّ ... لَام"
-   - يَعْطِيكَ الْعَافِيَة → "يَعْ ... طِي ... كَ ... الْ ... عَا ... فِ ... يَة"
+   - مَرْحَبًا  →  "مَرْ [pause] حَ [pause] بَا"
+   - مَرْحَبَتيْن →  "مَرْ [pause] حَ [pause] بَ [pause] تيْن"
+   - السَّلَامُ عَلَيْكُم — say each of these parts SEPARATELY with a full pause between them:
+     Part 1: "اسَّ" (the 'ss' sound at the start — lightly hissed)
+     Part 2: "لَا" (long 'laa' vowel)
+     Part 3: "مُ" (short 'mu')
+     Part 4: "عَ" ← THIS IS THE KEY PART. Before saying it, explicitly tell the student: "Now here comes the 'ع' Ayn sound — squeeze your throat like you're being gently choked, then say 'ah'."
+     Part 5: "لَيْ" (light 'lay')
+     Part 6: "كُم" (short 'kum')
+     Do NOT rush through the 'عَ' in 'عَلَيْكُم'. Hold it for a deliberate moment.
+   - وَعَلَيْكُمُ السَّلَام → "وَ [pause] عَ [pause] لَيْ [pause] كُ [pause] مُ [pause] اسَّ [pause] لَام"
+   - يَعْطِيكَ الْعَافِيَة → "يَعْ [pause] طِي [pause] كَ [pause] الْ [pause] عَا [pause] فِ [pause] يَة"
      (both 'ع' sounds must be voiced from the throat — model each one slowly and distinctly)
-   - وَعَلَيْكُمُ السَّلَام → "وَ ... عَ ... لَيْ ... كُ ... مُ ... الْ ... سَّ ... لَام"
-   - الله يَعَافِيك → "اللّه ... يَعَا ... فِيك"
+   - الله يَعَافِيك → "اللّه [pause] يَعَا [pause] فِيك"
 
 8. LESSON COMPLETION:
    After the student successfully completes BOTH steps for the FINAL word in the list, give brief closing feedback and say EXACTLY: "Lesson is now complete." (this phrase triggers the system to end the session).
