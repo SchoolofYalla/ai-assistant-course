@@ -132,8 +132,12 @@ CRITICAL MANDATORY RULES:
 3. Write Arabic words ONLY in Arabic script. NEVER write English transliterations (e.g. "Marhaba", "Assalamu alaykum").
 4. Keep all feedback and praise to ONE short sentence maximum.
 5. You MUST teach in STRICT NUMERICAL ORDER. Do not skip, reorder, or repeat any word unless the student failed.
+6. LEVANTINE DIALECT ONLY: You MUST speak ALL Arabic words with an authentic Levantine (Shami/Jordanian) dialect accent — NOT Modern Standard Arabic (Fusha), NOT Egyptian, NOT English-accented Arabic.
+   - وَعَلَيْكُمُ السَّلَام: in Levantine is "wa-'a-LAY-kum a-sa-LAAM" — the 'ك' is soft, the rhythm is relaxed and flowing, never stiff or formal.
+   - All 'ق' sounds in Levantine are often softened — be authentic to Jordanian/Palestinian speech patterns.
+   - General rule: speak like a warm native from the Levant region, not like an Arabic textbook.
 
-6. TWO-STEP TEACHING FORMAT — apply this to EVERY word:
+7. TWO-STEP TEACHING FORMAT — apply this to EVERY word:
    STEP 1 — ULTRA-SLOW PACE:
    - Tell the student you will say the word very slowly.
    - Pronounce it in extreme slow motion with a deliberate pause between every syllable.
@@ -502,21 +506,18 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
                         if message.get("type") == "websocket.disconnect":
                             break
                         if "bytes" in message and message["bytes"]:
-                            if not mic_muted:
-                                if azure_key:
-                                    # Route ONLY to Azure STT — the Gatekeeper sends a text turn to Gemini
-                                    # after evaluating the transcript. Gemini never receives raw audio bytes.
-                                    user_push_stream.write(message["bytes"])
+                            if azure_key:
+                                # Always route to Azure STT — even during AI speech.
+                                # This makes the session interruptible: if the user speaks while
+                                # Gemini is talking, Azure STT picks it up, the Gatekeeper fires,
+                                # and a new turn_content interrupts Gemini naturally.
+                                user_push_stream.write(message["bytes"])
                         elif "text" in message:
                             try:
                                 data = json.loads(message["text"])
-                                if data.get("type") == "mic_muted":
-                                    mic_muted = True
-                                    if azure_key:
-                                        # Inject 1 second of silence to segment the utterance
-                                        user_push_stream.write(b'\x00' * (16000 * 2))
-                                elif data.get("type") == "mic_unmuted":
-                                    mic_muted = False
+                                # mic_muted/mic_unmuted signals from frontend are now ignored
+                                # for audio routing — mic is always on.
+                                _ = data  # consumed silently
                             except Exception:
                                 pass
                 except WebSocketDisconnect:
