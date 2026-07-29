@@ -790,14 +790,21 @@
 
         case 'transcript':
           this._addBubble(msg.role || 'ai', msg.text, msg.id, true);
+          if (msg.role === 'user') {
+            this._clearAudioBuffer();
+          }
           break;
 
         case 'transcript_partial':
           this._addBubble(msg.role, msg.text, msg.id, false);
+          if (msg.role === 'user') {
+            this._clearAudioBuffer();
+          }
           break;
 
         case 'user_transcript':
           this._addBubble('user', msg.text, msg.id, true);
+          this._clearAudioBuffer();
           break;
 
         case 'session_ended':
@@ -866,6 +873,17 @@
         this.captureCtx.close();
         this.captureCtx = null;
       }
+    }
+
+    // ── Audio helpers ────────────────────────────────────────────────────────
+
+    _clearAudioBuffer() {
+      if (this.playCtx && this.playCtx.state !== 'closed') {
+        this.playCtx.close();
+        this.playCtx = null;
+        this.nextPlayTime = 0;
+      }
+      this.geminiSpeaking = false;
     }
 
     // ── PCM Playback (Gemini outputs 24kHz PCM) ──────────────────────────────
