@@ -162,8 +162,17 @@ CRITICAL MANDATORY RULES:
      * 'ع': "That 'ع' is not an 'A'! Squeeze your throat like you're being lightly choked to get that sound!"
 
    WORD-SPECIFIC SLOW-PACE SYLLABLE GUIDE (use these EXACT breakdowns in Step 1):
-   - مَرْحَبًا  →  "مَرْ [pause] حَ [pause] بَا"
-   - مَرْحَبَتيْن →  "مَرْ [pause] حَ [pause] بَ [pause] تيْن"
+   - مَرْحَبًا — say each part SEPARATELY with a full pause between them:
+     Part 1: "مَرْ" (short 'mar')
+     Part 2: "حَ" ← KEY PART. Before saying it, tell the student: "Now here comes the 'ح' Haa — breathe hard from deep in your throat, like fogging up a mirror from the inside."
+     Part 3: "بَا" (long 'baa')
+
+   - مَرْحَبَتيْن — say each part SEPARATELY with a full pause between them:
+     Part 1: "مَرْ" (short 'mar')
+     Part 2: "حَ" ← KEY PART. Tell the student: "Deep throat 'ح' here — breathe out hard from your throat, not from your lips!"
+     Part 3: "بَ" (short 'ba')
+     Part 4: "تيْن" (light 'teen' — this is what makes it 'double hello')
+
    - السَّلَامُ عَلَيْكُم — say each of these parts SEPARATELY with a full pause between them:
      Part 1: "اسَّ" (the opening 'al' merged with the 'ss')
      Part 2: "سَّ" (hold the double 'ss' — lightly hissed)
