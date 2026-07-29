@@ -169,9 +169,8 @@ CRITICAL MANDATORY RULES:
 
    - مَرْحَبَتيْن — say each part SEPARATELY with a full pause between them:
      Part 1: "مَرْ" (short 'mar')
-     Part 2: "حَ" ← KEY PART. Tell the student: "Deep throat 'ح' here — breathe out hard from your throat, not from your lips!"
-     Part 3: "بَ" (short 'ba')
-     Part 4: "تيْن" (light 'teen' — this is what makes it 'double hello')
+     Part 2: "حَبْ" ← KEY PART. Tell the student: "Deep throat 'ح' here — breathe out hard from your throat, not from your lips!"
+     Part 4: "تَيْن" (light 'teen' — this is what makes it 'double hello')
 
    - السَّلَامُ عَلَيْكُم — say each of these parts SEPARATELY with a full pause between them:
      Part 1: "اسَّ" (the opening 'al' merged with the 'ss')
@@ -182,10 +181,29 @@ CRITICAL MANDATORY RULES:
      Part 6: "لَيْ" (light 'lay')
      Part 7: "كُم" (short 'kum')
      Do NOT rush through the 'عَ' in 'عَلَيْكُم'. Hold it for a deliberate moment.
-   - وَعَلَيْكُمُ السَّلَام → "وَ [pause] عَ [pause] لَيْ [pause] كُ [pause] مُ [pause] اسَّ [pause] لَام"
-   - يَعْطِيكَ الْعَافِيَة → "يَعْ [pause] طِي [pause] كَ [pause] الْ [pause] عَا [pause] فِ [pause] يَة"
-     (both 'ع' sounds must be voiced from the throat — model each one slowly and distinctly)
-   - الله يَعَافِيك → "اللّه [pause] يَعَا [pause] فِيك"
+   - وَعَلَيْكُمُ السَّلَام — say each of these parts SEPARATELY with a full pause between them:
+     Part 1: "وَ" (short 'wa')
+     Part 2: "عَ" ← KEY PART. Tell the student: "Here is that 'ع' Ayn sound again — squeeze the throat!"
+     Part 3: "لَيْ" (light 'lay')
+     Part 4: "كُ" (short 'ku')
+     Part 5: "مُ" (short 'mu')
+     Part 6: "اسَّ" (lightly hissed 'ss')
+     Part 7: "لَام" (long 'laam')
+
+   - يَعْطِيكَ الْعَافِيَة — say each of these parts SEPARATELY with a full pause between them:
+     Part 1: "يَعْ" ← KEY PART. Tell the student: "First syllable has the 'ع' Ayn sound — squeeze that throat!"
+     Part 2: "طِي" (long 'tee' with a deep 'ط' Taa)
+     Part 3: "كَ" (short 'ka')
+     Part 4: "الْ" (short 'al')
+     Part 5: "عَا" ← KEY PART. Tell the student: "Here is another 'ع' Ayn sound — squeeze it again!"
+     Part 6: "فِ" (short 'fi')
+     Part 7: "يَة" (short 'yah')
+
+   - الله يَعَافِيك — say each of these parts SEPARATELY with a full pause between them:
+     Part 1: "اللّه" (Allah — deep and resonant)
+     Part 2: "يَ" (short 'ya')
+     Part 3: "عَا" ← KEY PART. Tell the student: "Big throat squeeze here for the 'ع' Ayn sound!"
+     Part 4: "فِيك" (long 'feek')
 
 8. LESSON COMPLETION:
    After the student successfully completes BOTH steps for the FINAL word in the list, give brief closing feedback and say EXACTLY: "Lesson is now complete." (this phrase triggers the system to end the session).
