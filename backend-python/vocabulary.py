@@ -8,7 +8,7 @@ DAILY_VOCABULARY: Dict[str, List[Dict[str, str]]] = {
             "id": "1",
             "english_intro": "Casual Greeting ('Hello'):",
             "usage_context": "Casual Greeting",
-            "target_arabic": "مَرْحَبًا",
+            "target_arabic": "مَرْحَبَا",
             "transliteration": "Mar7aba"
         },
         {
@@ -36,7 +36,7 @@ DAILY_VOCABULARY: Dict[str, List[Dict[str, str]]] = {
             "id": "5",
             "english_intro": "Sympathetic Greeting (to a male):",
             "usage_context": "Greeting to a male",
-            "target_arabic": "يَعْطِيكَ الْعَافِيَة",
+            "target_arabic": "يَعْطِيكْ الْعَافِيَة",
             "transliteration": "Ya3Teek il 3aafyeh"
         },
         {

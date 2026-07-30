@@ -164,7 +164,7 @@ CRITICAL MANDATORY RULES:
    → Do NOT mention squeezing, choking, or Ayn for these words.
 
    GROUP B — WORDS WITH 'ع' (voiced constriction, like being lightly choked):
-   These are: السَّلَامُ عَلَيْكُم, وَعَلَيْكُمُ السَّلَام, يَعْطِيكَ الْعَافِيَة, يَعْطِيكِ الْعَافِيَة, الله يَعَافِيك, الله يَعَافِيكِ
+   These are: السَّلَامُ عَلَيْكُم, وَعَلَيْكُمُ السَّلَام, يَعْطِيكْ الْعَافِيَة, يَعْطِيكِ الْعَافِيَة, الله يَعَافِيك, الله يَعَافِيكِ
    → When student mispronounces these, say ONLY: "That 'ع' needs a throat squeeze — like you are being very lightly choked. It is NOT a breath sound and NOT an English 'A'!"
    → Do NOT mention breath, fogging, or Haa for these words. These words have NO 'ح' in them.
 
