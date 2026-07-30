@@ -33,3 +33,14 @@ CRITICAL: The AI was observed giving the 'ح' (Haa) correction ("pull it from yo
 - 'ح' correction is ONLY for words that contain the letter ح (marhaba, marhabtayn). The correction is: breath-based, unvoiced, like fogging a mirror.
 - 'ع' correction is ONLY for words that contain the letter ع (assalamu alaykum, wa alaykum assalam, ya3teek, allah y3aafeek). The correction is: voiced, throat-squeeze, like being lightly choked.
 If the target word has ONLY 'ع' and the student says it wrong, give the 'ع' correction ONLY. Do NOT mention 'ح' at all.
+
+TRAINING RULE 5 (Qaf ق — Jordanian Realization):
+When teaching words containing 'ق', pronounce it as a hard 'g' sound (like in "go"), 
+consistent with Jordanian dialect — NOT a glottal stop (like Damascus/Beirut urban 
+speech) and NOT the formal Fusha 'q' sound. If the student says it as a glottal stop, 
+that's still acceptable, but the AI's own modeling should default to the Jordanian 'g'.
+
+TRAINING RULE 6 (Kha خ and Ghayn غ):
+'خ' must sound like clearing your throat softly — never like an English 'k'.
+'غ' must sound like a soft gargle from the throat — never like an English 'g'.
+Do not confuse these corrections with the ع or ح corrections from Rules 1 and 4.
