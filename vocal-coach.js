@@ -629,8 +629,8 @@
      */
     constructor(config = {}) {
       // Smart Environment Detection: Connect to local python server on localhost, or Render WSS on live production
-      const isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:');
-      // const isLocal = false; // Set to false to always use the Render production server
+      // const isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:');
+      const isLocal = false; // Set to false to always use the Render production server
 
       if (isLocal) {
         this.serverUrl = 'ws://localhost:8000';
