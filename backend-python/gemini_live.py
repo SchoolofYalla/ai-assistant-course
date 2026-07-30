@@ -208,20 +208,24 @@ CRITICAL MANDATORY RULES:
      Part 6: "سَ" (short 'sa')
      Part 7: "لَام" (long 'laam')
 
-   - يَعْطِيكْ الْعَافِيَة (to a male) — say each of these parts SEPARATELY with a full pause between them:
-     Part 1: "يَعْ" ← THIS IS THE KEY PART. (CRITICAL: Do NOT pronounce this as an English 'A'. Squeeze your throat to make a deep Arabic 'ع' Ayn sound). Before saying it, explicitly tell the student: "Now here comes the 'ع' Ayn sound — squeeze your throat like you're being gently choked, then say 'ah'."
-     Part 2: "طِيكْ" (long 'tee' with a deep 'ط' Taa, ending in 'k')
+   - يَعْطِيكْ الْعَافِيَة (to a male) — BEFORE starting, tell the student: "This word has TWO 'ع' Ayn sounds — squeeze your throat like you're being gently choked each time you hear 'ع'."
+     Then say each part SEPARATELY with a full pause between them. DO NOT stop for the student between parts — say ALL parts first, then ask them to repeat:
+     Part 1: "يَعْ" (Ayn + short 'e' — throat squeeze first!)
+     Part 2: "طِيكْ" (long 'tee' with deep 'ط' Taa, ending in 'k')
      Part 3: "الْ" (short 'al')
-     Part 4: "عَا" ← THIS IS THE KEY PART. (CRITICAL: Do NOT pronounce this as an English 'A'. Squeeze your throat to make a deep Arabic 'ع' Ayn sound). Before saying it, explicitly tell the student: "Now here comes the 'ع' Ayn sound — squeeze your throat like you're being gently choked, then say 'ah'."
+     Part 4: "عَا" (Ayn + long 'aa' — throat squeeze again!)
      Part 5: "فِيَة" (short 'fiye')
+     Now ask the student to repeat the whole word.
 
-   - يَعْطِيكِ الْعَافِيَة (to a female) — say each of these parts SEPARATELY with a full pause between them:
-     Part 1: "يَعْ" ← THIS IS THE KEY PART. (CRITICAL: Do NOT pronounce this as an English 'A'. Squeeze your throat to make a deep Arabic 'ع' Ayn sound). Before saying it, explicitly tell the student: "Now here comes the 'ع' Ayn sound — squeeze your throat like you're being gently choked, then say 'ah'."
-     Part 2: "طِي" (long 'tee' with a deep 'ط' Taa)
+   - يَعْطِيكِ الْعَافِيَة (to a female) — BEFORE starting, tell the student: "This word has TWO 'ع' Ayn sounds — squeeze your throat like you're being gently choked each time you hear 'ع'."
+     Then say each part SEPARATELY with a full pause between them. DO NOT stop for the student between parts — say ALL parts first, then ask them to repeat:
+     Part 1: "يَعْ" (Ayn + short 'e' — throat squeeze first!)
+     Part 2: "طِي" (long 'tee' with deep 'ط' Taa)
      Part 3: "كِ" (short 'ki')
      Part 4: "الْ" (short 'al')
-     Part 5: "عَا" ← THIS IS THE KEY PART. (CRITICAL: Do NOT pronounce this as an English 'A'. Squeeze your throat to make a deep Arabic 'ع' Ayn sound). Before saying it, explicitly tell the student: "Now here comes the 'ع' Ayn sound — squeeze your throat like you're being gently choked, then say 'ah'."
+     Part 5: "عَا" (Ayn + long 'aa' — throat squeeze again!)
      Part 6: "فيَة" (short 'fiye')
+     Now ask the student to repeat the whole word.
 
    - الله يَعَافِيك (response to a male) — say each of these parts SEPARATELY with a full pause between them:
      Part 1: "اللّه" (Allah — deep and resonant)
