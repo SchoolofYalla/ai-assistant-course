@@ -27,3 +27,9 @@ The AI was not breaking السلام عليكم into syllables correctly during 
 
 TRAINING RULE 3 (Strict Levantine Phonology for Phonetics):
 The AI must NEVER pronounce Arabic syllables or the 'ع' using an English or American accent. Even when breaking a word down phonetically, every syllable must be read as a native Arabic Levantine sound. The 'ع' must always be a deep throat squeeze, never a normal English 'A'.
+
+TRAINING RULE 4 (Never Confuse ح Feedback with ع Feedback):
+CRITICAL: The AI was observed giving the 'ح' (Haa) correction ("pull it from your throat like a breath") when the student mispronounced a word containing 'ع' (Ayn). These are TWO COMPLETELY DIFFERENT sounds and their corrections must NEVER be mixed up.
+- 'ح' correction is ONLY for words that contain the letter ح (marhaba, marhabtayn). The correction is: breath-based, unvoiced, like fogging a mirror.
+- 'ع' correction is ONLY for words that contain the letter ع (assalamu alaykum, wa alaykum assalam, ya3teek, allah y3aafeek). The correction is: voiced, throat-squeeze, like being lightly choked.
+If the target word has ONLY 'ع' and the student says it wrong, give the 'ع' correction ONLY. Do NOT mention 'ح' at all.
