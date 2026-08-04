@@ -336,6 +336,12 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
     Gemini Live → binary PCM @ 24kHz → Browser (as base64 JSON chunks)
     """
 
+    # ---------------------------------------------------------
+    # TEMPORARY DEV HACK: START DAY 2 AT WORD 13
+    from vocabulary import DAILY_VOCABULARY
+    vocab_list = DAILY_VOCABULARY["day_2_good_morning"][0:]
+    # ---------------------------------------------------------
+
     gemini_key = os.getenv("GEMINI_API_KEY")
     if not gemini_key:
         await websocket.send_json({"type": "error", "message": "Gemini API Key is missing."})
@@ -345,18 +351,17 @@ async def run_live_session(websocket: WebSocket, vocab_list: list):
     system_prompt = build_system_prompt(vocab_list)
 
     config = types.LiveConnectConfig(
-        response_modalities=["AUDIO"],
-        system_instruction=system_prompt,
-        generation_config=types.GenerateContentConfig(
-            temperature=0.5,
-        ),
-        speech_config=types.SpeechConfig(
-            voice_config=types.VoiceConfig(
-                prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name="Aoede")
-            )
+    response_modalities=["AUDIO"],
+    system_instruction=system_prompt,
+    generation_config=types.GenerateContentConfig(
+        temperature=0.6,  # هاد هو السطر اللي بقلل العشوائية وبيضبط الحرارة
+    ),
+    speech_config=types.SpeechConfig(
+        voice_config=types.VoiceConfig(
+            prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name="Aoede")
         )
     )
-
+)
 
     safe_print(f"[Live] Starting Gemini Live session with {len(vocab_list)} words...")
 
