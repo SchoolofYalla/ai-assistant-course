@@ -551,9 +551,12 @@
             <span>AI Assistant is Ready</span>
         </div>
 
-        <div style="color: var(--brand-yellow); font-weight: 600; margin-bottom: 0.5rem; letter-spacing: 1px; text-transform: uppercase; font-size: 0.9rem;">Day 1: Greetings Session</div>
+        <div
+            style="color: var(--brand-yellow); font-weight: 600; margin-bottom: 0.5rem; letter-spacing: 1px; text-transform: uppercase; font-size: 0.9rem;">
+            Day 1: Greetings Session</div>
         <h1>Spelling Coach<br>Repeat After Me</h1>
-        <p>Tap the <span class="highlight">yellow icon</span> below to practice spelling. Listen to the AI and repeat after it!</p>
+        <p>Tap the <span class="highlight">yellow icon</span> below to practice spelling. Listen to the AI and repeat
+            after it!</p>
 
         <!-- Live Transcript Box -->
         <div id="transcript-container" class="transcript-container">
@@ -572,7 +575,7 @@
     <script src="../vocal-coach.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const vocalCoach = new LiveVocalCoachClient({
+            window.vocalCoach = new LiveVocalCoachClient({
                 serverUrl: 'wss://ai-assistant-course.onrender.com',
                 dayId: 'day_1_greetings',
                 buttonSlotId: 'vapi-icon-slot',

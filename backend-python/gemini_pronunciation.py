@@ -245,6 +245,31 @@ async def evaluate_pronunciation_openai_stream(audio_buffer: bytes, target_arabi
     except Exception as e:
         safe_print(f"[Fast-Fail Error] {e}")
 
+
+        # ── Fast-Fail: Deterministic Catch for Truncated/Incomplete Answers ────
+
+        
+    try:
+        target_bare_check = re.sub(r'[\u064B-\u065F\u0670]', '', target_arabic).strip()
+        stt_bare_check = re.sub(r'[\u064B-\u065F\u0670]', '', stt_text).strip()
+
+        def bare_norm(s):
+            s = re.sub(r'[\u0623\u0625\u0622]', '\u0627', s)
+            s = re.sub(r'\s+', '', s)
+            return s
+
+        t_norm = bare_norm(target_bare_check)
+        s_norm = bare_norm(stt_bare_check)
+
+        if s_norm and t_norm and s_norm != t_norm:
+            if t_norm.startswith(s_norm) and len(t_norm) - len(s_norm) >= 1:
+                safe_print("[Fast-Fail] Truncated/incomplete answer detected.")
+                yield {"type": "metadata", "passed": False, "accuracy": 0.0, "recognized_text": stt_text, "fast_match": False}
+                yield {"type": "feedback_chunk", "text": "Close, but you missed part of it — make sure to say the whole phrase, all the way to the end."}
+                return
+    except Exception as e:
+        safe_print(f"[Fast-Fail Truncation Error] {e}")
+
     # ── Step 2: Gemini Flash text evaluation ─────────────────────────────────
     try:
         gemini_key = os.getenv("GEMINI_API_KEY")
@@ -278,6 +303,7 @@ EVALUATION RULES:
    - If target is MALE (ends in Fatha َ ), STT "انت" or "أنتَ" = PASS. STT "انتي" or "أنتِ" = FAIL.
 3. Complete gibberish from Whisper (e.g. a completely unrelated sentence) = FAIL.
 4. Empty or very short stt_text = FAIL.
+5. COMPLETENESS IS MANDATORY: The student must say the ENTIRE phrase, including every word and suffix. If they drop a word, a suffix (like ـكم), or stop early, that is a FAIL — regardless of how correct the part they did say sounds. Do not give credit for a partial or "close enough" phrase.
 {f"DIALECT NOTE: {dialect_rules}" if dialect_rules else ""}
 
 RESPOND on a single line in exactly this format:

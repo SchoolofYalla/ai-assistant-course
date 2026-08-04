@@ -575,7 +575,7 @@
     <script src="../vocal-coach.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const vocalCoach = new LiveVocalCoachClient({
+            window.vocalCoach = new LiveVocalCoachClient({
                 serverUrl: 'wss://ai-assistant-course.onrender.com',
                 dayId: 'day_2_good_morning',
                 buttonSlotId: 'vapi-icon-slot',

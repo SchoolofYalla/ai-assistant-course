@@ -831,6 +831,7 @@
         this.captureCtx = new (window.AudioContext || window.webkitAudioContext)();
         this.nativeRate = this.captureCtx.sampleRate;
         console.log(`[Live] Mic open at ${this.nativeRate}Hz, streaming at ${this.targetRate}Hz`);
+        this._startAudioWatchdog(this.captureCtx);
 
         const source = this.captureCtx.createMediaStreamSource(this.micStream);
         this.scriptProc = this.captureCtx.createScriptProcessor(4096, 1, 1);
@@ -856,6 +857,7 @@
     }
 
     _stopMic() {
+      this._stopAudioWatchdog();
       this.isStreaming = false;
       if (this.scriptProc) {
         this.scriptProc.disconnect();
@@ -869,6 +871,22 @@
       if (this.captureCtx && this.captureCtx.state !== 'closed') {
         this.captureCtx.close();
         this.captureCtx = null;
+      }
+    }
+    _startAudioWatchdog(ctx) {
+      if (this._watchdogInterval) clearInterval(this._watchdogInterval);
+      this._watchdogInterval = setInterval(() => {
+        if (ctx && ctx.state === 'suspended') {
+          console.warn('[Live] AudioContext silently suspended — forcing resume.');
+          ctx.resume();
+        }
+      }, 1000);
+    }
+
+    _stopAudioWatchdog() {
+      if (this._watchdogInterval) {
+        clearInterval(this._watchdogInterval);
+        this._watchdogInterval = null;
       }
     }
 
